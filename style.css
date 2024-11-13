@@ -151,13 +151,23 @@ input::placeholder {
   background-color: red;
 }
 
+p.err {
+    text-align: start;
+    margin-top: 10px;
+    font-size: 18px;
+    color: red;
+    font-weight: 700;
+}
+
 .shape {
   animation: blob 7s infinite;
   z-index: 0;
 }
+
 .container_wrapper {
   position: relative;
 }
+
 .animate_div:nth-of-type(1) {
   position: absolute;
   top: 0;

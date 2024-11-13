@@ -2,12 +2,18 @@ const add_task = document
   .querySelector(".add_task")
   .addEventListener("click", addTask);
 
-  function addTask() {
-    const task_input = document.querySelector(".task_input");
-    task_input.focus()
+function addTask() {
+  const task_input = document.querySelector(".task_input");
+  task_input.focus();
   const taskTrimText = task_input.value.trim(); // trim removes white spaces from first and last
 
-  if (taskTrimText !== "") {
+  if (taskTrimText === "") {
+    const errorMsgDiv = document.querySelector(".err")
+    errorMsgDiv.textContent = "Please enter your task first!!"
+    setTimeout(() => {
+      errorMsgDiv.textContent = ""
+    }, 1000);
+  } else {
     const mainTasks = document.querySelector(".main_tasks");
 
     const taskList = document.createElement("div");
@@ -30,19 +36,22 @@ const add_task = document
 
     EditBtn.addEventListener("click", () => {
       if (completeBtn.textContent !== "Not Done") {
-        const textElement = taskItem.querySelector("p");
-        const inputElement = document.createElement("input");
-        inputElement.type = "text";
-        inputElement.value = textElement.textContent;
-
-        taskItem.replaceChild(inputElement, textElement);
-        inputElement.focus();
-        taskItem.style.padding = "0";
-        inputElement.addEventListener("blur", () => {
+        if (EditBtn.textContent === "Edit") {
+          const textElement = taskItem.querySelector("p");
+          const inputElement = document.createElement("input");
+          inputElement.type = "text";
+          inputElement.value = textElement.textContent;
+          taskItem.replaceChild(inputElement, textElement);
+          inputElement.focus();
+          taskItem.style.padding = "0";
+          EditBtn.textContent = "Update";
+        } else {
+          const inputElement = taskItem.querySelector("input");
           const newP = document.createElement("p");
           newP.textContent = inputElement.value;
           taskItem.replaceChild(newP, inputElement);
-        });
+          EditBtn.textContent = "Edit";
+        }
       }
     });
 
@@ -51,19 +60,34 @@ const add_task = document
     completeBtn.textContent = "Done";
 
     completeBtn.addEventListener("click", () => {
-      if (completeBtn.textContent === "Done") {
+      if (
+        completeBtn.textContent === "Done" &&
+        EditBtn.textContent === "Edit"
+      ) {
         taskItem.style.backgroundColor = "#74ec74";
         taskItem.style.color = "#ffffff";
-        completeBtn.style.backgroundColor = "#74ec74"
-        completeBtn.style.color = "#ffffff"
+        completeBtn.style.backgroundColor = "#74ec74";
+        completeBtn.style.color = "#ffffff";
         completeBtn.textContent = "Not Done";
+        EditBtn.style.opacity = 0.4;
+        EditBtn.style.backgroundColor = "blue";
+        EditBtn.style.color = "white";
+        deleteBtn.style.opacity = 0.4;
+        deleteBtn.style.backgroundColor = "red";
+        deleteBtn.style.color = "white";
         taskItem.style.padding = "10px 20px";
       } else {
         taskItem.style.backgroundColor = "";
         taskItem.style.color = "";
-        completeBtn.style.backgroundColor = ""
-        completeBtn.style.color = ""
+        completeBtn.style.backgroundColor = "";
+        completeBtn.style.color = "";
         completeBtn.textContent = "Done";
+        EditBtn.style.opacity = 1;
+        EditBtn.style.backgroundColor = "";
+        EditBtn.style.color = "";
+        deleteBtn.style.opacity = 1;
+        deleteBtn.style.backgroundColor = "";
+        deleteBtn.style.color = "";
         taskItem.style.padding = "0";
       }
     });
@@ -74,7 +98,10 @@ const add_task = document
     deleteBtn.textContent = "Remove";
 
     deleteBtn.addEventListener("click", () => {
-      if (completeBtn.textContent === "Done") {
+      if (
+        completeBtn.textContent === "Done" &&
+        EditBtn.textContent === "Edit"
+      ) {
         mainTasks.removeChild(taskList);
       }
     });
